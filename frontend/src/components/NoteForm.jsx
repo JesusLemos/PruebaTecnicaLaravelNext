@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Form, Button, Container } from 'react-bootstrap';
 
 const NoteForm = () => {
     const { id } = useParams();
@@ -10,7 +11,6 @@ const NoteForm = () => {
 
     useEffect(() => {
         if (id) {
-            // Si el ID existe, estamos en modo edición
             const fetchNote = async () => {
                 try {
                     const response = await axios.get(`http://localhost/api/notes/${id}`);
@@ -30,40 +30,52 @@ const NoteForm = () => {
 
         try {
             if (id) {
-                // Modo edición (PUT)
                 await axios.put(`http://localhost/api/notes/${id}`, noteData);
             } else {
-                // Modo creación (POST)
                 await axios.post('http://localhost/api/notes', noteData);
             }
-            navigate('/'); // Vuelve al listado de notas
+            navigate('/');
         } catch (err) {
             console.error("Error al guardar la nota", err);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Container className="my-4">
             <h2>{id ? 'Editar Nota' : 'Crear Nueva Nota'}</h2>
-            <div>
-                <label>Título (requerido)</label>
-                <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label>Contenido</label>
-                <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
-            </div>
-            <button type="submit">Guardar</button>
-            <button type="button" onClick={() => navigate('/')}>Cancelar</button>
-        </form>
+            <Form onSubmit={handleSubmit} className="mt-3">
+                <Form.Group className="mb-3" controlId="formBasicTitle">
+                    <Form.Label>Título (requerido)</Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="Introduce el título de la nota"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                    />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formBasicContent">
+                    <Form.Label>Contenido</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={5}
+                        placeholder="Escribe el contenido de la nota"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                </Form.Group>
+
+                <div className="d-flex justify-content-end">
+                    <Button variant="secondary" onClick={() => navigate('/')} className="me-2">
+                        Cancelar
+                    </Button>
+                    <Button variant="primary" type="submit">
+                        Guardar
+                    </Button>
+                </div>
+            </Form>
+        </Container>
     );
 };
 
