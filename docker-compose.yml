@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     image: notes-app-backend
     container_name: notes-app-backend
+    user: "${UID}:${GID}"
     volumes:
       - ./backend:/var/www/html
     networks:
