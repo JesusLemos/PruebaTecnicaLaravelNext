@@ -70,7 +70,7 @@ const NoteList = () => {
                 </Form.Group>
             </Form>
 
-            <Row xs={1} md={2} lg={3} className="g-4 justify-content-center w-100">
+            <Row xs={1} sm={2} md={3} lg={4} className="g-4 justify-content-center w-100">
                 {notes.map(note => (
                     <Col key={note.id}>
                         <Card className="shadow card-fixed-width">
