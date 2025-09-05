@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Container, Button, Row, Col, Card } from 'react-bootstrap';
 
 const NoteList = () => {
+    // ... (el resto de tu código, como useState y useEffect, es el mismo)
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Función para obtener las notas
+    // ... (las funciones fetchNotes, useEffect y handleDelete son las mismas)
     const fetchNotes = async () => {
         try {
             const response = await axios.get('http://localhost/api/notes');
@@ -26,35 +28,43 @@ const NoteList = () => {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost/api/notes/${id}`);
-            // Actualiza la lista de notas después de eliminar
             setNotes(notes.filter(note => note.id !== id));
         } catch (err) {
-            setError(err);
+            console.error("Error deleting note:", err);
         }
     };
 
-    if (loading) return <p>Cargando notas...</p>;
-    if (error) return <p>Error al cargar las notas: {error.message}</p>;
+
+    if (loading) return <p className="text-center text-gray-500">Cargando notas...</p>;
+    if (error) return <p className="text-center text-red-500">Error al cargar las notas: {error.message}</p>;
 
     return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Container className="my-4">
+            <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Notas</h2>
-                <Link to="/new" className="button">Nueva Nota</Link>
+                <Button as={Link} to="/new" variant="primary">Nueva Nota</Button>
             </div>
-            <ul>
+            <Row xs={1} md={2} className="g-4">
                 {notes.map(note => (
-                    <li key={note.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-                        <h3>{note.title}</h3>
-                        <p>{note.content}</p>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <Link to={`/edit/${note.id}`}>Editar</Link>
-                            <button onClick={() => handleDelete(note.id)}>Borrar</button>
-                        </div>
-                    </li>
+                    <Col key={note.id}>
+                        <Card className="shadow">
+                            <Card.Body>
+                                <Card.Title>{note.title}</Card.Title>
+                                <Card.Text>{note.content}</Card.Text>
+                                <div className="d-flex justify-content-between mt-3">
+                                    <Button as={Link} to={`/edit/${note.id}`} variant="info" size="sm">
+                                        Editar
+                                    </Button>
+                                    <Button onClick={() => handleDelete(note.id)} variant="danger" size="sm">
+                                        Borrar
+                                    </Button>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 ))}
-            </ul>
-        </div>
+            </Row>
+        </Container>
     );
 };
 
