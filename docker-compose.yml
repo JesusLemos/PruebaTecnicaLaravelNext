@@ -11,17 +11,21 @@ services:
     networks:
       - notes-network
 
-#  frontend:
-#    build:
-#      context: ./frontend
-#      dockerfile: Dockerfile
-#    image: notes-app-frontend
-#    container_name: notes-app-frontend
-#    volumes:
-#      - ./frontend:/app
-#      - /app/node_modules
-#    networks:
-#      - notes-network
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: notes-app-frontend
+    container_name: notes-app-frontend
+    user: "${UID}:${GID}"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - notes-network
+    command: npm run dev
 
   webserver:
     image: nginx:alpine
