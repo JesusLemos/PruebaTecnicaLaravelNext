@@ -10,6 +10,10 @@ cp .env-example .env
 echo "UID=$(id -u)" >> .env
 echo "GID=$(id -g)" >> .env
 
+# Crear fichero database.sqlite
+
+touch backend/database/database.sqlite
+
 # Asegúrate de que el usuario de tu máquina local es el propietario del archivo de la base de datos.
 # Esto previene el error "attempt to write a readonly database".
 sudo chown $(id -u):$(id -g) backend/database/database.sqlite
